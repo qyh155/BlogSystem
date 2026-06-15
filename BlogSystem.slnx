@@ -1,9 +1,0 @@
-<Solution>
-  <Folder Name="/src/">
-    <Project Path="src/BlogSystem.API/BlogSystem.API.csproj" />
-    <Project Path="src/BlogSystem.Application/BlogSystem.Application.csproj" />
-    <Project Path="src/BlogSystem.Domain/BlogSystem.Domain.csproj" />
-    <Project Path="src/BlogSystem.Infrastructure/BlogSystem.Infrastructure.csproj" />
-    <Project Path="src/BlogSystem.Shared/BlogSystem.Shared.csproj" />
-  </Folder>
-</Solution>
