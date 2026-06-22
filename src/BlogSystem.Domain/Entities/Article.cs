@@ -16,7 +16,7 @@ namespace BlogSystem.src.Domain.Entities
         public string CoverImageUrl { get; set; } = string.Empty;
         public int ViewCount { get; set; } = 0;
         public int LikeCount { get; set; } = 0;
-        public bool Ispublished { get; set; } = false;
+        public bool IsPublished { get; set; } = false;
         public bool IsDeleted { get; set; } = false;
 
         public DateTime CreatedAt { get; set; }

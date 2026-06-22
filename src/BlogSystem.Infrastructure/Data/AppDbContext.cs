@@ -16,7 +16,11 @@ namespace BlogSystem.src.Infrastructure.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             //-------------------User------------------------
-
+            modelBuilder.Entity<User>(entity =>
+            {
+                entity.Property(u => u.AvatarUrl)
+                    .HasDefaultValue("/Avatar/default.png");
+            });
             //-------------------Article------------------------
             modelBuilder.Entity<Article>(entity =>
             {
@@ -54,6 +58,87 @@ namespace BlogSystem.src.Infrastructure.Data
                     .WithMany(a => a.Tags)
                     .UsingEntity(j => j.ToTable("ArticleTags"));
             });
+
+            //==================== 新加的种子数据 ====================
+            modelBuilder.Entity<User>().HasData(new User
+            {
+                Id = 1,
+                UserName = "admin",
+                Email = "admin@Blog.com",
+                PasswordHash = "留空",
+                CreatedAt = new DateTime(2026,1,1,0,0,0,DateTimeKind.Utc)
+            });
+
+            modelBuilder.Entity<Article>().HasData(new Article
+            {
+                Id = 1,
+                Title = "欢迎来到我的博客",
+                Content = "这是我的第一篇文章，欢迎大家阅读！",
+                Summary = "开篇",
+                IsPublished = true,
+                UserId = 1,
+                CategoryId = 1,
+                CoverImageUrl = "https://picsum.photos/800/400",
+                CreatedAt = new DateTime(2026, 1, 1, 12, 0, 0, 0, DateTimeKind.Utc),
+                UpdatedAt = new DateTime(2026, 1, 1, 12, 1, 1, 1, DateTimeKind.Utc),
+                ViewCount = 50,
+                LikeCount = 5
+            });
+
+            modelBuilder.Entity<Category>().HasData(
+                new Category { Id = 1, Name = "技术" },
+                new Category { Id = 2, Name = "生活" }
+                );
+
+            modelBuilder.Entity<Tag>().HasData(
+                new Tag { Id = 1, Name = "技术" },
+                new Tag { Id = 2, Name = "生活" },
+                new Tag { Id = 3, Name = "工作" }
+                );
+
+            modelBuilder.Entity<Comment>().HasData(
+                new Comment
+                {
+                    Id = 1,
+                    ArticleId = 1,
+                    Content = "文章写的很好",
+                    AuthorName = "张三",
+                    IsApproved = true,
+                    CreatedAt = new DateTime(2026, 1, 1, 12, 2, 2, DateTimeKind.Utc),
+                },
+                new Comment
+                {
+                    Id = 2,
+                    ArticleId = 1,
+                    Content = "期待下一篇分享",
+                    AuthorName = "李四",
+                    IsApproved = true,
+                    CreatedAt = new DateTime(2026, 1, 1, 13, 2, 2, DateTimeKind.Utc),
+                },
+
+                new Comment
+                {
+                    Id = 3,
+                    ArticleId = 1,
+                    ParentId = 1,
+                    Content = "说的不错",
+                    AuthorName = "李四",
+                    IsApproved = true,
+                    CreatedAt = new DateTime(2026, 1, 1, 13, 3, 2, DateTimeKind.Utc),
+                },
+
+                new Comment
+                {
+                    Id = 4,
+                    ArticleId = 1,
+                    ParentId = 3,
+                    Content = "谢谢",
+                    AuthorName = "张三",
+                    IsApproved = true,
+                    CreatedAt = new DateTime(2026, 1, 1, 13, 3, 2, DateTimeKind.Utc),
+                }
+                );
+
         }
     }
 }

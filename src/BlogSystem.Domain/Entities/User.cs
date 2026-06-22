@@ -4,11 +4,14 @@ using System.ComponentModel.DataAnnotations;
 namespace BlogSystem.src.Domain.Entities
 {
     [Index(nameof(UserName), IsUnique = true)]
+    [Index(nameof(Email), IsUnique = true)]
     public class User
     {
         public int Id { get; set; }
         [MaxLength(50)]
         public string UserName { get; set; } = string.Empty;
+        [MaxLength(100)]
+        public string Email { get; set; } = string.Empty;
         [MaxLength(255)]
         public string PasswordHash { get; set; } = string.Empty;
         public string? AvatarUrl { get; set; }

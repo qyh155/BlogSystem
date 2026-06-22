@@ -3,6 +3,7 @@ using System;
 using BlogSystem.src.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BlogSystem.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260621142755_SeedData")]
+    partial class SeedData
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -62,7 +65,7 @@ namespace BlogSystem.Infrastructure.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
 
-                    b.Property<bool>("IsPublished")
+                    b.Property<bool>("Ispublished")
                         .HasColumnType("boolean");
 
                     b.Property<int>("LikeCount")
@@ -108,7 +111,7 @@ namespace BlogSystem.Infrastructure.Migrations
                             CoverImageUrl = "https://picsum.photos/800/400",
                             CreatedAt = new DateTime(2026, 1, 1, 12, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
-                            IsPublished = true,
+                            Ispublished = true,
                             LikeCount = 5,
                             Summary = "开篇",
                             Title = "欢迎来到我的博客",
