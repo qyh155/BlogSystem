@@ -50,6 +50,8 @@ namespace BlogSystem.src.Infrastructure.Data
                     .WithOne(a => a.Category)
                     .HasForeignKey(a => a.CategoryId)
                     .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasIndex(c => c.Name).IsUnique();
             });
 
             modelBuilder.Entity<Tag>(entity => 
@@ -57,6 +59,8 @@ namespace BlogSystem.src.Infrastructure.Data
                 entity.HasMany(t => t.Articles)
                     .WithMany(a => a.Tags)
                     .UsingEntity(j => j.ToTable("ArticleTags"));
+
+                entity.HasIndex(t => t.Name).IsUnique();
             });
 
             //==================== 新加的种子数据 ====================
