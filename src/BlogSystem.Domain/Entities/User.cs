@@ -1,21 +1,24 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using BlogSystem.Domain;
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 
-namespace BlogSystem.src.Domain.Entities
+namespace BlogSystem.Domain.Entities
 {
-    [Index(nameof(UserName), IsUnique = true)]
-    [Index(nameof(Email), IsUnique = true)]
-    public class User
+    public class User : AppEntity<int>
     {
-        public int Id { get; set; }
+        [Required]
         [MaxLength(50)]
-        public string UserName { get; set; } = string.Empty;
+        public string UserName { get; set; } = null!;
+
+        [Required]
         [MaxLength(100)]
-        public string Email { get; set; } = string.Empty;
+        public string Email { get; set; } = null!;
         [MaxLength(255)]
-        public string PasswordHash { get; set; } = string.Empty;
+        public string? PasswordHash { get; set; }
+        
+        [MaxLength(500)]
         public string? AvatarUrl { get; set; }
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime CreatedAt { get; set; }
         public DateTime? LastLoginAt { get; set; }
 
         public ICollection<Article> Articles { get; set; } = new List<Article>(); //用户的文章

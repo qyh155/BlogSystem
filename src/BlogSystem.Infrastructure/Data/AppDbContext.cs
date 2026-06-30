@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using BlogSystem.src.Domain.Entities;
+using BlogSystem.Domain.Entities;
 
-namespace BlogSystem.src.Infrastructure.Data
+namespace BlogSystem.Infrastructure.Data
 {
     public class AppDbContext:DbContext
     {
@@ -20,18 +20,30 @@ namespace BlogSystem.src.Infrastructure.Data
             {
                 entity.Property(u => u.AvatarUrl)
                     .HasDefaultValue("/Avatar/default.png");
-            });
-            //-------------------Article------------------------
-            modelBuilder.Entity<Article>(entity =>
+
+                entity.Property(u => u.CreatedAt)
+                    .HasDefaultValueSql("now() at time zone 'utc'");
+
+                entity.HasIndex(u => u.UserName).IsUnique();
+                entity.HasIndex(u => u.Email).IsUnique();
+                //每个User的用户名和邮箱肯定是不同的
+
+                //-------------------Article------------------------
+                modelBuilder.Entity<Article>(entity =>
             {
+                entity.Property(a => a.CreatedAt)
+                    .HasDefaultValueSql("now() at time zone 'utc'");
+                // UpdatedAt 由业务代码赋值，不设数据库默认值
+
                 entity.HasOne(a => a.User)
                     .WithMany()
+                    .HasForeignKey(a => a.UserId)
                     .OnDelete(DeleteBehavior.Restrict);
 
                 entity.HasQueryFilter(a => !a.IsDeleted);
             });
-
-            modelBuilder.Entity<Comment>(entity =>
+                //-------------------Comment------------------------
+                modelBuilder.Entity<Comment>(entity =>
             {
                 entity.HasOne(c => c.Article)
                     .WithMany(a => a.Comments)
@@ -43,8 +55,8 @@ namespace BlogSystem.src.Infrastructure.Data
                     .HasForeignKey(c => c.ParentId)
                     .OnDelete(DeleteBehavior.Restrict);
             });
-
-            modelBuilder.Entity<Category>(entity =>
+                //-------------------Category------------------------
+                modelBuilder.Entity<Category>(entity =>
             {
                 entity.HasMany(c => c.Articles)
                     .WithOne(a => a.Category)
@@ -53,8 +65,8 @@ namespace BlogSystem.src.Infrastructure.Data
 
                 entity.HasIndex(c => c.Name).IsUnique();
             });
-
-            modelBuilder.Entity<Tag>(entity => 
+                //-------------------Tag------------------------
+                modelBuilder.Entity<Tag>(entity => 
             {
                 entity.HasMany(t => t.Articles)
                     .WithMany(a => a.Tags)

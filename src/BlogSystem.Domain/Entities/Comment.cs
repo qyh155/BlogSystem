@@ -1,13 +1,13 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using BlogSystem.Domain;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace BlogSystem.src.Domain.Entities
+namespace BlogSystem.Domain.Entities
 {
-    public class Comment
+    public class Comment : AppEntity<int>
     {
-        public int Id { get; set; }
         [Required]
-        public string Content { get; set; } = string.Empty;
+        public string Content { get; set; } = default!;
         [MaxLength(50)]
         public string? AuthorName { get; set; } //游客名称
         public bool IsApproved { get; set; } = true; // 默认通过，被标记为垃圾时设为 false

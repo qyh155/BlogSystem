@@ -1,4 +1,4 @@
-﻿namespace BlogSystem.src.Domain.Interfaces
+﻿namespace BlogSystem.Domain.Interfaces
 {
     public class IRepository
     {

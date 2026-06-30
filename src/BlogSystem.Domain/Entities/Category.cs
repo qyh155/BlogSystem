@@ -1,17 +1,16 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
+using BlogSystem.Domain;
 
-namespace BlogSystem.src.Domain.Entities
+namespace BlogSystem.Domain.Entities
 {
-    [Index(nameof(Name), IsUnique = true)]
-    public class Category
+    public class Category : AppEntity<int>
     {
-        public int Id { get; set; }
+        [Required]
         [MaxLength(50)]
-        public string Name { get; set; } = string.Empty;
+        public string Name { get; set; } = default!;
         [MaxLength(500)]
-        public string Description { get; set; } = string.Empty;
-        public int DispalyOrder { get; set; }
+        public string? Description { get; set; }
+        public int DisplayOrder { get; set; }
 
         //种类下的文章
         public ICollection<Article> Articles { get; set; } = new List<Article>();

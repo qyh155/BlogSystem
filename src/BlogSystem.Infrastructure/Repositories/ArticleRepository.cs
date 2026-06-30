@@ -1,6 +1,6 @@
 ﻿using BlogSystem.Domain.Interfaces;
-using BlogSystem.src.Domain.Entities;
-using BlogSystem.src.Infrastructure.Data;
+using BlogSystem.Domain.Entities;
+using BlogSystem.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace BlogSystem.Infrastructure.Repositories

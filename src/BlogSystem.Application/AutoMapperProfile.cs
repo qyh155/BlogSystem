@@ -1,4 +1,4 @@
-﻿namespace BlogSystem.src.Application
+﻿namespace BlogSystem.Application
 {
     public class AutoMapperProfile
     {

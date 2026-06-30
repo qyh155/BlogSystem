@@ -1,4 +1,4 @@
-using BlogSystem.src.Infrastructure.Data;
+using BlogSystem.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);

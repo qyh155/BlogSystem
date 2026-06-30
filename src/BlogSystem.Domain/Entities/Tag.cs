@@ -1,15 +1,14 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using BlogSystem.Domain;
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 
-namespace BlogSystem.src.Domain.Entities
+namespace BlogSystem.Domain.Entities
 {
-    [Index(nameof(Name), IsUnique = true)]
-    public class Tag
+    public class Tag : AppEntity<int>
     {
-        public int Id { get; set; }
         [Required]
         [MaxLength(30)]
-        public string Name { get; set; } = string.Empty;
+        public string Name { get; set; } = default!;
 
         public ICollection<Article> Articles { get; set; } = new List<Article>();
     }
