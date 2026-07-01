@@ -8,11 +8,11 @@ namespace BlogSystem.Domain.Entities
     {
         [Required]
         [MaxLength(50)]
-        public string UserName { get; set; } = null!;
+        public string UserName { get; set; } = default!;
 
         [Required]
         [MaxLength(100)]
-        public string Email { get; set; } = null!;
+        public string Email { get; set; } = default!;
         [MaxLength(255)]
         public string? PasswordHash { get; set; }
         

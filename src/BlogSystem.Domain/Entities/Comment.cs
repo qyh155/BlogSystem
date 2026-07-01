@@ -13,13 +13,11 @@ namespace BlogSystem.Domain.Entities
         public bool IsApproved { get; set; } = true; // 默认通过，被标记为垃圾时设为 false
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
-        public int ArticleId { get; set; }
         //外键
-        [ForeignKey(nameof(ArticleId))]
+        public int ArticleId { get; set; }
         public Article? Article{ get; set; }
 
         public int? ParentId { get; set; }
-        [ForeignKey(nameof(ParentId))]
         public Comment? Parent { get; set; }
 
         public ICollection<Comment> Replies { get; set; } = new List<Comment>();

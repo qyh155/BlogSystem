@@ -37,7 +37,7 @@ namespace BlogSystem.Infrastructure.Migrations
                     b.ToTable("ArticleTags", (string)null);
                 });
 
-            modelBuilder.Entity("BlogSystem.src.Domain.Entities.Article", b =>
+            modelBuilder.Entity("BlogSystem.Domain.Entities.Article", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -57,7 +57,9 @@ namespace BlogSystem.Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("now() at time zone 'utc'");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
@@ -83,9 +85,6 @@ namespace BlogSystem.Infrastructure.Migrations
                     b.Property<int>("UserId")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("UserId1")
-                        .HasColumnType("integer");
-
                     b.Property<int>("ViewCount")
                         .HasColumnType("integer");
 
@@ -94,8 +93,6 @@ namespace BlogSystem.Infrastructure.Migrations
                     b.HasIndex("CategoryId");
 
                     b.HasIndex("UserId");
-
-                    b.HasIndex("UserId1");
 
                     b.ToTable("Articles");
 
@@ -118,7 +115,7 @@ namespace BlogSystem.Infrastructure.Migrations
                         });
                 });
 
-            modelBuilder.Entity("BlogSystem.src.Domain.Entities.Category", b =>
+            modelBuilder.Entity("BlogSystem.Domain.Entities.Category", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -127,11 +124,10 @@ namespace BlogSystem.Infrastructure.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("character varying(500)");
 
-                    b.Property<int>("DispalyOrder")
+                    b.Property<int>("DisplayOrder")
                         .HasColumnType("integer");
 
                     b.Property<string>("Name")
@@ -150,20 +146,18 @@ namespace BlogSystem.Infrastructure.Migrations
                         new
                         {
                             Id = 1,
-                            Description = "",
-                            DispalyOrder = 0,
+                            DisplayOrder = 0,
                             Name = "技术"
                         },
                         new
                         {
                             Id = 2,
-                            Description = "",
-                            DispalyOrder = 0,
+                            DisplayOrder = 0,
                             Name = "生活"
                         });
                 });
 
-            modelBuilder.Entity("BlogSystem.src.Domain.Entities.Comment", b =>
+            modelBuilder.Entity("BlogSystem.Domain.Entities.Comment", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -245,7 +239,7 @@ namespace BlogSystem.Infrastructure.Migrations
                         });
                 });
 
-            modelBuilder.Entity("BlogSystem.src.Domain.Entities.Tag", b =>
+            modelBuilder.Entity("BlogSystem.Domain.Entities.Tag", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -283,7 +277,7 @@ namespace BlogSystem.Infrastructure.Migrations
                         });
                 });
 
-            modelBuilder.Entity("BlogSystem.src.Domain.Entities.User", b =>
+            modelBuilder.Entity("BlogSystem.Domain.Entities.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -293,11 +287,14 @@ namespace BlogSystem.Infrastructure.Migrations
 
                     b.Property<string>("AvatarUrl")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("text")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
                         .HasDefaultValue("/Avatar/default.png");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("now() at time zone 'utc'");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -308,7 +305,6 @@ namespace BlogSystem.Infrastructure.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("PasswordHash")
-                        .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("character varying(255)");
 
@@ -318,6 +314,12 @@ namespace BlogSystem.Infrastructure.Migrations
                         .HasColumnType("character varying(50)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
+
+                    b.HasIndex("UserName")
+                        .IsUnique();
 
                     b.ToTable("Users");
 
@@ -334,56 +336,52 @@ namespace BlogSystem.Infrastructure.Migrations
 
             modelBuilder.Entity("ArticleTag", b =>
                 {
-                    b.HasOne("BlogSystem.src.Domain.Entities.Article", null)
+                    b.HasOne("BlogSystem.Domain.Entities.Article", null)
                         .WithMany()
                         .HasForeignKey("ArticlesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BlogSystem.src.Domain.Entities.Tag", null)
+                    b.HasOne("BlogSystem.Domain.Entities.Tag", null)
                         .WithMany()
                         .HasForeignKey("TagsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("BlogSystem.src.Domain.Entities.Article", b =>
+            modelBuilder.Entity("BlogSystem.Domain.Entities.Article", b =>
                 {
-                    b.HasOne("BlogSystem.src.Domain.Entities.Category", "Category")
+                    b.HasOne("BlogSystem.Domain.Entities.Category", "Category")
                         .WithMany("Articles")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("BlogSystem.src.Domain.Entities.User", "User")
-                        .WithMany()
+                    b.HasOne("BlogSystem.Domain.Entities.User", "User")
+                        .WithMany("Articles")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.HasOne("BlogSystem.src.Domain.Entities.User", null)
-                        .WithMany("Articles")
-                        .HasForeignKey("UserId1");
 
                     b.Navigation("Category");
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("BlogSystem.src.Domain.Entities.Comment", b =>
+            modelBuilder.Entity("BlogSystem.Domain.Entities.Comment", b =>
                 {
-                    b.HasOne("BlogSystem.src.Domain.Entities.Article", "Article")
+                    b.HasOne("BlogSystem.Domain.Entities.Article", "Article")
                         .WithMany("Comments")
                         .HasForeignKey("ArticleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BlogSystem.src.Domain.Entities.Comment", "Parent")
+                    b.HasOne("BlogSystem.Domain.Entities.Comment", "Parent")
                         .WithMany("Replies")
                         .HasForeignKey("ParentId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("BlogSystem.src.Domain.Entities.User", null)
+                    b.HasOne("BlogSystem.Domain.Entities.User", null)
                         .WithMany("Comments")
                         .HasForeignKey("UserId");
 
@@ -392,22 +390,22 @@ namespace BlogSystem.Infrastructure.Migrations
                     b.Navigation("Parent");
                 });
 
-            modelBuilder.Entity("BlogSystem.src.Domain.Entities.Article", b =>
+            modelBuilder.Entity("BlogSystem.Domain.Entities.Article", b =>
                 {
                     b.Navigation("Comments");
                 });
 
-            modelBuilder.Entity("BlogSystem.src.Domain.Entities.Category", b =>
+            modelBuilder.Entity("BlogSystem.Domain.Entities.Category", b =>
                 {
                     b.Navigation("Articles");
                 });
 
-            modelBuilder.Entity("BlogSystem.src.Domain.Entities.Comment", b =>
+            modelBuilder.Entity("BlogSystem.Domain.Entities.Comment", b =>
                 {
                     b.Navigation("Replies");
                 });
 
-            modelBuilder.Entity("BlogSystem.src.Domain.Entities.User", b =>
+            modelBuilder.Entity("BlogSystem.Domain.Entities.User", b =>
                 {
                     b.Navigation("Articles");
 

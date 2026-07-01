@@ -20,4 +20,8 @@
     <ProjectReference Include="..\BlogSystem.Domain\BlogSystem.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+  </ItemGroup>
+
 </Project>

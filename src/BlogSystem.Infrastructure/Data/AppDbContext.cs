@@ -3,7 +3,7 @@ using BlogSystem.Domain.Entities;
 
 namespace BlogSystem.Infrastructure.Data
 {
-    public class AppDbContext:DbContext
+    public class AppDbContext : DbContext
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
@@ -27,23 +27,24 @@ namespace BlogSystem.Infrastructure.Data
                 entity.HasIndex(u => u.UserName).IsUnique();
                 entity.HasIndex(u => u.Email).IsUnique();
                 //每个User的用户名和邮箱肯定是不同的
-
-                //-------------------Article------------------------
-                modelBuilder.Entity<Article>(entity =>
+            });
+            //-------------------Article------------------------
+            modelBuilder.Entity<Article>(entity =>
             {
                 entity.Property(a => a.CreatedAt)
                     .HasDefaultValueSql("now() at time zone 'utc'");
                 // UpdatedAt 由业务代码赋值，不设数据库默认值
 
                 entity.HasOne(a => a.User)
-                    .WithMany()
+                    .WithMany(u => u.Articles)
                     .HasForeignKey(a => a.UserId)
+                    .IsRequired()
                     .OnDelete(DeleteBehavior.Restrict);
 
                 entity.HasQueryFilter(a => !a.IsDeleted);
             });
-                //-------------------Comment------------------------
-                modelBuilder.Entity<Comment>(entity =>
+            //-------------------Comment------------------------
+            modelBuilder.Entity<Comment>(entity =>
             {
                 entity.HasOne(c => c.Article)
                     .WithMany(a => a.Comments)
@@ -55,8 +56,8 @@ namespace BlogSystem.Infrastructure.Data
                     .HasForeignKey(c => c.ParentId)
                     .OnDelete(DeleteBehavior.Restrict);
             });
-                //-------------------Category------------------------
-                modelBuilder.Entity<Category>(entity =>
+            //-------------------Category------------------------
+            modelBuilder.Entity<Category>(entity =>
             {
                 entity.HasMany(c => c.Articles)
                     .WithOne(a => a.Category)
@@ -65,8 +66,8 @@ namespace BlogSystem.Infrastructure.Data
 
                 entity.HasIndex(c => c.Name).IsUnique();
             });
-                //-------------------Tag------------------------
-                modelBuilder.Entity<Tag>(entity => 
+            //-------------------Tag------------------------
+            modelBuilder.Entity<Tag>(entity =>
             {
                 entity.HasMany(t => t.Articles)
                     .WithMany(a => a.Tags)
@@ -82,7 +83,7 @@ namespace BlogSystem.Infrastructure.Data
                 UserName = "admin",
                 Email = "admin@Blog.com",
                 PasswordHash = "留空",
-                CreatedAt = new DateTime(2026,1,1,0,0,0,DateTimeKind.Utc)
+                CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc)
             });
 
             modelBuilder.Entity<Article>().HasData(new Article
@@ -152,9 +153,7 @@ namespace BlogSystem.Infrastructure.Data
                     AuthorName = "张三",
                     IsApproved = true,
                     CreatedAt = new DateTime(2026, 1, 1, 13, 3, 2, DateTimeKind.Utc),
-                }
-                );
-
+                });
         }
     }
 }
